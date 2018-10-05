@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,10 +9,47 @@
     <link rel="stylesheet" href="css/style.css">
     <script type="module" src="js/index.js"></script>
 </head>
+
 <body>
-    <h1>Pokemon</h1>
-    <section id="contenido"
-    ></section>
-    
+    <header>
+        <h1>Pokemon</h1>
+        <div class="buscador">
+            <div>
+                <label for="tipo">Tipo 1:</label>
+                <select name="tipo" id="selectorTipo1">
+                </select>
+            </div>
+
+            <div>
+                <label for="tipo">Tipo 2:</label>
+                <select name="tipo" id="selectorTipo2">
+                </select>
+            </div>
+        </div>
+        <div class="buscador">
+            <input type="text" name="" id="inputBuscar" placeholder="buscar">
+            <div>
+                <label for="order">Ordenar</label>
+                <select name="" id="ordenar">
+                    <option value="">Ordenar por..</option>
+                    <option value="attack">attack</option>
+                    <option value="defense">defense</option>
+                    <option value="special-attack">special attack</option>
+                    <option value="special-defense">special defense</option>
+                    <option value="speed">speed</option>
+                    <option value="hp">hp</option>
+                </select>
+            </div>
+        </div>
+
+    </header>
+    <hr>
+    <section id="contenido"></section>
+    <div class="loader">
+        <h3>Cargando mundo pokemon...</h3>
+        <img src="img/pikachu.gif" alt="" srcset="">
+    </div>
+
 </body>
+
 </html>

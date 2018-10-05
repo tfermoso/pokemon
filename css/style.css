@@ -1,6 +1,9 @@
+body{
+    font-family: 'Courier New', Courier, monospace
+}
 #contenido{
     width: 80%;
-    margin: 0 auto;
+    margin: 60px auto;
     display: flex;
     flex-wrap: wrap;
 }
@@ -51,4 +54,38 @@ article{
 .tooltip:hover .tooltiptext {
     visibility: visible;
     opacity: 1;
+}
+
+.loader{
+    position: relative;
+    width: 50%;
+    margin: -100px auto;
+}
+
+.loader img{
+
+}
+
+.loader h3{
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+}
+header{
+    display: flex;
+    justify-content: space-between;
+}
+.buscador{
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+.buscador label{
+    margin-left: 5px;
+}
+.buscador input,select{
+    height: 20px;
+    font-family: 'Courier New', Courier, monospace;
 }
