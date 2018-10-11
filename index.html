@@ -29,7 +29,7 @@
         <div class="buscador">
             <input type="text" name="" id="inputBuscar" placeholder="buscar">
             <div>
-                <label for="order">Ordenar</label>
+                <label for="order">Ordenar <span id="direction">&uarr;</span></label>
                 <select name="" id="ordenar">
                     <option value="">Ordenar por..</option>
                     <option value="attack">attack</option>
@@ -43,6 +43,25 @@
         </div>
 
     </header>
+    <h3>Generations</h3>
+    <div>
+        <label for="">First</label>
+        <input type="checkbox" checked class="generation" name="" id="g1">
+        <label for="">Second</label>
+        <input type="checkbox" name="" class="generation" value="152-251" id="g2">
+        <label for="">Thrid</label>
+        <input type="checkbox" name="" class="generation" value="252-386" id="g3">
+        <label for="">Fourth</label>
+        <input type="checkbox" name="" class="generation" value="387-494" id="g4">
+        <label for="">Fifth</label>
+        <input type="checkbox" name="" class="generation" value="495-649" id="g5">
+        <label for="">Sixth</label>
+        <input type="checkbox" name="" class="generation" value="650-721" id="g6">
+        <label for="">Seventh</label>
+        <input type="checkbox" name="" class="generation" value="722-802" id="g7">
+        <label for="">Specials</label>
+        <input type="checkbox" name="" class="generation" value="803" id="g8">
+    </div>
     <hr>
     <section id="contenido"></section>
     <div class="loader">
@@ -50,6 +69,17 @@
         <img src="img/pikachu.gif" alt="" srcset="">
     </div>
 
+    <!-- The Modal -->
+<div id="myModal" class="modal">
+
+    <!-- Modal content -->
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p>Info Pokemon</p>
+      <div id="detailCard"></div>
+    </div>
+  
+  </div>
 </body>
 
 </html>

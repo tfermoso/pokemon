@@ -24,4 +24,14 @@ export class Pokemon{
         }
         return stats;
     }
+    
+    setDescription(des){
+        this.description=des;
+    }
+    setEvolution(evol){
+        this.evolution=evol;
+    }
+
+    
+
 }
