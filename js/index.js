@@ -2,10 +2,10 @@ import { Pokemon } from './pokemon.js';
 import { COLOR, colores } from './constantes.js';
 import { bcolor } from './funciones.js';
 
-// if ('serviceWorker' in navigator) {
-//     console.log("Registrando service worker");
-//     navigator.serviceWorker.register('sw.js');
-//   }
+if ('serviceWorker' in navigator) {
+    console.log("Registrando service worker");
+    navigator.serviceWorker.register('sw.js');
+  }
 
 String.prototype.capitalize = function () {
     return this.toLowerCase().replace(/(^|\s)([a-z])/g, function (m, p1, p2) { return p1 + p2.toUpperCase(); });
@@ -27,21 +27,26 @@ window.onload = function () {
     // Get the <span> element that closes the modal
     var span = document.getElementsByClassName("close")[0];
     // When the user clicks on <span> (x), close the modal
+    //lista checkbox generations
     var generations = document.getElementsByClassName("generation");
 
-    //Si ya tengo los datos, creo la lista de pokemon desde localstorage   
-    if (miStorage.getItem("pokemons2") != null) {
+    //Si ya tengo los datos, creo la lista de pokemon desde localstorage 
+    if (miStorage.getItem("pokemons") != null ) {
         //Genero la lista de pokemons
-        var pokemons = JSON.parse(miStorage.getItem("pokemons"));
-        pokemons.forEach(pokemon => {
-            var pk = new Pokemon(pokemon.name, pokemon.img, pokemon.id, pokemon.types, pokemon.stats);
-            if (pokemon["description"] != undefined) pk.setDescription(pokemon.description);
-            if (pokemon["evolution"] != undefined) pk.setEvolution(pokemon.evolution);
-            listaPokemons.push(pk);
-            // console.log(listaPokemons);
-        })
-        mostrarPokemon(listaPokemons);
+        var pokemonsfl = JSON.parse(miStorage.getItem("pokemons"));
+        for (const g in pokemonsfl) {
+            pokemonsfl[g].forEach(pokemon => {
+                var pk = new Pokemon(pokemon.name, pokemon.img, pokemon.id, pokemon.types, pokemon.stats,g);
+                if (pokemon["description"] != undefined) pk.setDescription(pokemon.description);
+                if (pokemon["evolution"] != undefined) pk.setEvolution(pokemon.evolution);
+                if (fullList[g] == undefined) fullList[g] = [];
+                fullList[g].push(pk);
+                // console.log(listaPokemons);
+            })
+        }
+        mostrarPokemon(loadGenerations());
     } else {
+        //Si no tengo datos cargo solo la primera generación
         var xmlhttp = new XMLHttpRequest();
         var url = "https://pokeapi.co/api/v2/pokemon/";
 
@@ -51,7 +56,6 @@ window.onload = function () {
                 cargarPokemon(resultado.results.slice(0, 151), "g1")
                 //cargarPokemon(resultado.results)
             }
-
         }
         xmlhttp.open("GET", url, true);
         xmlhttp.send(null);
@@ -81,18 +85,35 @@ window.onload = function () {
                         stats[element.stat.name] = element.base_stat;
                     });
                     pokemon.name = pokemon.name.capitalize();
-                    var pk = new Pokemon(pokemon.name, resultadoPokemon.sprites.front_default, resultadoPokemon.id, types, stats);
-
+                    var pk = new Pokemon(pokemon.name, resultadoPokemon.sprites.front_default, resultadoPokemon.id, types, stats,g);
+                    pk.setSpecies(resultadoPokemon.species.url);
                     lpokemon.push(pk);
-                    mostrarPokemon(lpokemon.sort(ordenarPk));
+                    if (g == "g1")
+                        mostrarPokemon(lpokemon.sort(ordenarPk));
                     if (lpokemon.length == pokemons.length) {
                         fullList[g] = lpokemon;
                         miStorage.setItem('pokemons', JSON.stringify(fullList));
-                        //     mostrarPokemon(listaPokemons);
+                        //mostramos los pokemos según los filtros
+                        filtrar();
+                        // mostrarPokemon(loadGenerations());
                     }
                 }
             }
         });
+    }
+
+    /**
+     * @returns {Array} lista de pokemons
+     * @description esta función carga en una lista todos los pokemons a mostrar en función de los checkbox seleccionados
+     */
+    function loadGenerations() {
+        var listaP = [];
+        for (const iterator of generations) {
+            if (iterator.checked) {
+                listaP = listaP.concat(fullList[iterator.id])
+            }
+        }
+        return listaP.sort(ordenarPk);
     }
 
     function mostrarPokemon(listaPokemons) {
@@ -109,7 +130,7 @@ window.onload = function () {
             var img = document.createElement("img");
             img.src = pokemon.img;
             var span = document.createElement("span");
-            span.innerHTML = `<b>nombre:${pokemon.name}</b><br>tipo:${pokemon.getTypes()}<br>${pokemon.getStats()}`;
+            span.innerHTML = `<b>nombre:${pokemon.name}</b><br>tipo:${pokemon.getTypes()}<br>${pokemon.getStats()}${pokemon.g}`;
             span.className = "tooltiptext";
             card.appendChild(img);
             card.appendChild(a);
@@ -118,9 +139,6 @@ window.onload = function () {
             card.addEventListener("click", eventCard)
             section.appendChild(card);
         });
-
-
-
     }
 
     selectTipo.forEach(select => {
@@ -260,6 +278,7 @@ window.onload = function () {
         var tipo2 = document.getElementById("selectorTipo2").value;
         var texto = inputSearch.value;
         var listaFiltrada;
+        var listaPokemons = loadGenerations();
         if (texto != "") {
             listaFiltrada = listaPokemons.filter(pokemon => {
                 if (pokemon.name.toLowerCase().search(inputSearch.value.toLowerCase()) >= 0) {
@@ -281,7 +300,6 @@ window.onload = function () {
                 return true;
             }
         }).sort(ordenarPokemons));
-
     }
 
     function mostrarModal(pokemon) {
@@ -294,7 +312,7 @@ window.onload = function () {
 
     function eventCard(ev) {
         var id = ev.currentTarget.id.slice(4);
-        var pokemon = listaPokemons.filter(pk => {
+        var pokemon = loadGenerations().filter(pk => {
             if (pk.id == id) return true;
         }
         )[0];
@@ -304,11 +322,12 @@ window.onload = function () {
         } else {
             var xmlhttp = new XMLHttpRequest();
             url = `https://pokeapi.co/api/v2/pokemon-species/${id}/`;
+            if(id>803) url= pokemon.species;
             xmlhttp.open("GET", url, true);
             xmlhttp.send(null);
             xmlhttp.onreadystatechange = function () {
                 if (this.readyState == 4 && this.status == "200") {
-                    console.log(this.response);
+                    // console.log(this.response);
                     var infoDetail = JSON.parse(this.response);
                     // var pokemon = listaPokemons.find(pk => {
                     //     if (pk.id == id) return true;
@@ -331,7 +350,7 @@ window.onload = function () {
                                 var res = evolucion(datosEvolucion);
                                 pokemon.setEvolution(res);
                                 mostrarModal(pokemon);
-                                miStorage.setItem("pokemons", JSON.stringify(listaPokemons));
+                                miStorage.setItem("pokemons", JSON.stringify(fullList));
                             }
                         }
                     }
@@ -345,6 +364,7 @@ window.onload = function () {
 
 
     }
+
     function getInfoEvolucion(obj) {
         if (Object.keys(obj.ev).length === 0) {
             return `<span>${obj.name}</span>`;
@@ -395,7 +415,12 @@ window.onload = function () {
         }
 
     }
-
+    /**
+     * 
+     * @param {Pokemon} pokemon 
+     * @description Esta función a partir de un Objeto pokemon, genera el html y asocia el evento click.
+     * @returns {string} 
+     */
     function htmlCard(pokemon) {
         var content = document.createElement("div");
         var col1 = document.createElement("div");
@@ -434,34 +459,32 @@ window.onload = function () {
         return content;
     }
 
-    for (const e of generations) {
-        e.addEventListener("change", (e) => {
+    /**
+     * Asociamos el evento a cada checkbox de la página
+     */
+    for (const check of generations) {
+        check.addEventListener("change", (e) => {
             var rango = e.currentTarget.value.split("-");
             var generacion = e.currentTarget.id;
+            //Compruebo si ya tengo los datos en fullList y si estoy seleccionando el checkbox
             if (fullList[generacion] == undefined && e.currentTarget.checked) {
                 var xmlhttp = new XMLHttpRequest();
                 var url = "https://pokeapi.co/api/v2/pokemon/";
-
                 xmlhttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
                         var resultado = JSON.parse(this.response);
                         if (rango[1] != undefined) {
                             cargarPokemon(resultado.results.slice(parseInt(rango[0]), parseInt(rango[1])), generacion)
-                        } else{
+                        } else {
                             cargarPokemon(resultado.results.slice(parseInt(rango[0])), generacion)
                         }
-
-                        //cargarPokemon(resultado.results)
                     }
-
                 }
                 xmlhttp.open("GET", url, true);
                 xmlhttp.send(null);
-            } else if (e.currentTarget.checked) {
-                listaPokemons.concat(fullList[generacion]);
-                mostrarPokemon(listaPokemons.sort(ordenarPk));
             } else {
-                mostrarPokemon([])
+                //Si no tengo que pedir datos, muestro utilizando la función de filtrar
+                filtrar()
             }
         })
     }

@@ -6,8 +6,7 @@ self.addEventListener('install', event => {
       caches.open("v1")
         .then(cache => cache.addAll(
             [
-                './',
-                'index.html'
+                './'
             ]
         ))
         .then(self.skipWaiting())
@@ -31,7 +30,7 @@ self.addEventListener('activate', event => {
 
   self.addEventListener('fetch', event => {
     // Skip cross-origin requests, like those for Google Analytics.
-    console.log(event.request.url);
+    // console.log(event.request.url);
     if (event.request.url.startsWith(self.location.origin)) {
       event.respondWith(
         caches.match(event.request).then(cachedResponse => {

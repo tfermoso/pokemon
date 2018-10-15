@@ -1,10 +1,11 @@
 export class Pokemon{
-    constructor(name,img,id,types,stats){
+    constructor(name,img,id,types,stats,g){
         this.name=name;
         this.id=id;
         this.img=img;
         this.types=types;
         this.stats=stats;
+        this.g=g;
     }
 
     getTypes(){
@@ -30,6 +31,10 @@ export class Pokemon{
     }
     setEvolution(evol){
         this.evolution=evol;
+    }
+
+    setSpecies(url){
+        this.species=url;
     }
 
     
