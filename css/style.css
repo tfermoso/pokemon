@@ -63,9 +63,7 @@ article{
     margin: -100px auto;
 }
 
-.loader img{
 
-}
 
 .loader h3{
         position: absolute;
@@ -131,4 +129,31 @@ header{
     display: flex;
     justify-content: space-between;
 
+}
+
+@media screen and (max-width:640px) {
+    /* reglas CSS */
+    #contenido{
+        width: 95%;
+        margin: 5px auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
+    header{
+        display: flex;
+        flex-direction: column
+    }
+    .buscador{
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: normal
+    }
+    
+}
+@media screen and (max-width:1024px) and (min-width:640px) {
+    /* reglas CSS */
+}
+@media screen and (min-width:1024px) {
+    /* reglas CSS */
 }
