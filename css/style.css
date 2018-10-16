@@ -149,6 +149,20 @@ header{
         justify-content: space-evenly;
         align-items: normal
     }
+    .buscador input,select{
+        height: 20px;
+        font-family: 'Courier New', Courier, monospace;
+        width: 70%;
+        border-radius: 2px;
+        margin-bottom: 5px;
+    }
+    #inputBuscar{
+        width: 90%;
+    }
+    #ordenar{
+        width: 65%;
+    }
+    
     
 }
 @media screen and (max-width:1024px) and (min-width:640px) {
